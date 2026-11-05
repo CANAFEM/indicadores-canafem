@@ -46,7 +46,7 @@ def dibujar(fecha, valores, destinos):
         lienzo.text((x, y), nombre, font=letra("Bold", 15), fill=VERDE)
         lienzo.text((x, y + 19 * escala), valores[codigo], font=letra("Regular", 20), fill=OSCURO)
     lienzo.text((ancho - 22 * escala, 258 * escala), "Fuente: Diario Oficial de la Federación",
-                font=letra("Regular", 11), fill=(95, 95, 95) anchor="ra")
+                font=letra("Regular", 11), fill=(95, 95, 95), anchor="ra")
     for destino in destinos:
         imagen.save(destino, optimize=True)
 
