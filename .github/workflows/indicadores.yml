@@ -1,6 +1,6 @@
-on:
-
 name: Actualizar indicadores
+
+on:
   schedule:
     - cron: "15 12 * * 1-5"
     - cron: "45 12 * * 1-5"
