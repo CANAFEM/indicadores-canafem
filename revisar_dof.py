@@ -39,7 +39,7 @@ def contiene(texto, frases):
 
 def clasificar(nota):
     titulo = simple(nota.get("titulo"))
-    organismo = simple(nota.get("nombreCodOrgaUno"))
+    organismo = simple(f"{nota.get('codOrgaDos') or ''} {nota.get('nombreCodOrgaUno') or ''}")
     if not titulo:
         return None
     if "salud" in organismo:
@@ -75,7 +75,7 @@ def enlace(nota):
 
 def cuadro(nota):
     titulo = html.escape(nota["titulo"].strip())
-    pie = html.escape(f"{fecha_larga(nota['fecha'])} {nombre_organismo(nota.get('nombreCodOrgaUno'))}")
+    pie = html.escape(f"{fecha_larga(nota['fecha'])} {nombre_organismo(nota.get('codOrgaDos') or nota.get('nombreCodOrgaUno'))}")
     url = html.escape(enlace(nota), quote=True)
     return (
         '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" '
