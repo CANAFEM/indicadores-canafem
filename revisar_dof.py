@@ -78,7 +78,7 @@ def cuadro(nota):
     pie = html.escape(f"{fecha_larga(nota['fecha'])} {nombre_organismo(nota.get('codOrgaDos') or nota.get('nombreCodOrgaUno'))}")
     url = html.escape(enlace(nota), quote=True)
     return (
-        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" '
+        '<table role="presentation" width="94%" align="center" cellpadding="0" cellspacing="0" border="0" '
         'style="background:#B0B0B0;border:1px solid #000000;margin-bottom:12px;">\n'
         '  <tr><td style="padding:16px 18px;font-family:Arial,sans-serif;font-size:15px;'
         f'line-height:22px;color:#000000;text-align:justify;">{titulo}</td></tr>\n'
