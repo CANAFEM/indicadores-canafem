@@ -1,0 +1,27 @@
+on:
+  schedule:
+    - cron: "15 12 * * 1-5"
+    - cron: "45 12 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update && sudo apt-get install -y fonts-liberation
+      - run: pip install pillow
+      - run: python generar_imagen.py
+      - name: Guardar imagen
+        run: |
+          git config user.name "indicadores-bot"
+          git config user.email "indicadores-bot@users.noreply.github.com"
+          git add imagenes
+          git diff --cached --quiet || git commit -m "Actualiza indicadores"
+          git push
