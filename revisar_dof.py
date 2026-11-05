@@ -25,7 +25,7 @@ DECRETO_TEMAS = [
     "arancel", "impuestos generales de importacion", "inversion extranjera",
 ]
 SALUD_NORMAS = ["nom-120", "nom-130", "nom-251"]
-EXCLUIR = ["construccion", "edificacion", "edificaciones"]
+EXCLUIR = ["construccion", "edificacion", "edificaciones", "cemento", "concreto"]
 
 
 def simple(texto):
