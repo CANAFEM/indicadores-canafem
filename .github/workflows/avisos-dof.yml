@@ -1,0 +1,22 @@
+name: Revisar notas del DOF
+
+on:
+  schedule:
+    - cron: "30 12 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python revisar_dof.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
