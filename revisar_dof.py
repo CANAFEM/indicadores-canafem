@@ -74,7 +74,7 @@ def enlace(nota):
 
 
 def cuadro(nota):
-titulo = html.escape(re.sub(r"^\S+", lambda m: m.group().upper(), nota["titulo"].strip()))
+    titulo = html.escape(re.sub(r"^\S+", lambda m: m.group().upper(), nota["titulo"].strip()))
     pie = html.escape(f"{fecha_larga(nota['fecha'])} {nombre_organismo(nota.get('codOrgaDos') or nota.get('nombreCodOrgaUno'))}")
     url = html.escape(enlace(nota), quote=True)
     return (
