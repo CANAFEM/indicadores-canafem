@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import urllib.error
 import urllib.request
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -53,14 +54,19 @@ def dibujar(fecha, valores, destinos):
 
 def main():
     hoy = datetime.now(ZoneInfo("America/Mexico_City")).strftime("%d-%m-%Y")
-    lista = leer_datos(hoy).get("ListaIndicadores") or []
+    try:
+        lista = leer_datos(hoy).get("ListaIndicadores") or []
+    except (urllib.error.HTTPError, ValueError) as error:
+        print("El DOF no publico indicadores hoy (posible dia inhabil):", error)
+        return
     if not lista:
         print("Sin datos para hoy; se conserva la imagen anterior.")
         return
     valores = {dato["codTipoIndicador"]: dato["valor"] for dato in lista}
     faltantes = [nombre for codigo, nombre in TIPOS.items() if not valores.get(codigo)]
     if faltantes:
-        sys.exit("Faltan indicadores: " + ", ".join(faltantes))
+        print("Faltan indicadores hoy; se conserva la imagen anterior:", ", ".join(faltantes))
+        return
     fecha = lista[0]["fecha"]
     dia, mes, anio = fecha.split("-")
     os.makedirs("imagenes", exist_ok=True)
