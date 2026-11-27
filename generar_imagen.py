@@ -1,4 +1,4 @@
-python
+
 """Crea la imagen semanal de indicadores con los datos publicados por el DOF."""
 import json
 import os
