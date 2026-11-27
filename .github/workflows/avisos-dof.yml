@@ -2,7 +2,7 @@ name: Revisar notas del DOF
 
 on:
   schedule:
-    - cron: "30 12 * * 5"
+    - cron: "7 11 * * 5"
   workflow_dispatch:
 
 permissions:
