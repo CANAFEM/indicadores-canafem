@@ -1,3 +1,4 @@
+python
 """Crea la imagen semanal de indicadores con los datos publicados por el DOF."""
 import json
 import os
@@ -52,6 +53,14 @@ def dibujar(fecha, valores, destinos):
         imagen.save(destino, optimize=True)
 
 
+TIIE_PLAZO = (165, 166, 174)
+
+
+def decimales(valor):
+    numero = valor.strip().rstrip("%")
+    return len(numero.split(".")[1]) if "." in numero else 0
+
+
 HORA_LIMITE = 9  # A partir de esta hora, la falta de datos se marca como error
 
 
@@ -72,7 +81,14 @@ def main():
             sys.exit(f"El DOF aún no entrega los indicadores del {hoy}. Revisa antes de enviar.")
         print("El DOF aún no entrega los datos de hoy; se volverá a intentar más tarde.")
         return
-    valores = {dato["codTipoIndicador"]: dato["valor"] for dato in lista}
+    valores = {}
+    for dato in lista:
+        codigo, valor = dato["codTipoIndicador"], dato["valor"]
+        # La TIIE de fondeo se publica con 2 decimales y las de plazo con 4.
+        # A veces el DOF etiqueta el fondeo con el código de otra TIIE.
+        if codigo in TIIE_PLAZO and decimales(valor) <= 2:
+            codigo = 175
+        valores.setdefault(codigo, valor)
     faltantes = [nombre for codigo, nombre in TIPOS.items() if not valores.get(codigo)]
     if faltantes:
         sys.exit("Faltan indicadores: " + ", ".join(faltantes))
