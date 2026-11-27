@@ -2,8 +2,8 @@ name: Actualizar indicadores
 
 on:
   schedule:
-    - cron: "15 12 * * 1-5"
-    - cron: "45 12 * * 1-5"
+    - cron: "15,45 12-14 * * 1-5"
+    - cron: "15 15 * * 1-5"
   workflow_dispatch:
 
 permissions:
