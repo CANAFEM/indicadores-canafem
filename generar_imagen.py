@@ -1,7 +1,7 @@
+"""Crea la imagen semanal de indicadores con los datos publicados por el DOF."""
 import json
 import os
 import sys
-import urllib.error
 import urllib.request
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -52,21 +52,30 @@ def dibujar(fecha, valores, destinos):
         imagen.save(destino, optimize=True)
 
 
+HORA_LIMITE = 9  # A partir de esta hora, la falta de datos se marca como error
+
+
 def main():
-    hoy = datetime.now(ZoneInfo("America/Mexico_City")).strftime("%d-%m-%Y")
+    ahora = datetime.now(ZoneInfo("America/Mexico_City"))
+    hoy = ahora.strftime("%d-%m-%Y")
+    archivo_hoy = f"imagenes/indicadores-{ahora:%Y-%m-%d}.png"
+    if len(sys.argv) == 1 and os.path.exists(archivo_hoy):
+        print("La imagen de hoy ya existe:", archivo_hoy)
+        return
     try:
         lista = leer_datos(hoy).get("ListaIndicadores") or []
-    except (urllib.error.HTTPError, ValueError) as error:
-        print("El DOF no publico indicadores hoy (posible dia inhabil):", error)
-        return
+    except Exception as error:
+        print("No se pudo consultar el DOF:", error)
+        lista = []
     if not lista:
-        print("Sin datos para hoy; se conserva la imagen anterior.")
+        if ahora.hour >= HORA_LIMITE:
+            sys.exit(f"El DOF aún no entrega los indicadores del {hoy}. Revisa antes de enviar.")
+        print("El DOF aún no entrega los datos de hoy; se volverá a intentar más tarde.")
         return
     valores = {dato["codTipoIndicador"]: dato["valor"] for dato in lista}
     faltantes = [nombre for codigo, nombre in TIPOS.items() if not valores.get(codigo)]
     if faltantes:
-        print("Faltan indicadores hoy; se conserva la imagen anterior:", ", ".join(faltantes))
-        return
+        sys.exit("Faltan indicadores: " + ", ".join(faltantes))
     fecha = lista[0]["fecha"]
     dia, mes, anio = fecha.split("-")
     os.makedirs("imagenes", exist_ok=True)
